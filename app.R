@@ -39,17 +39,16 @@ ui = fluidPage(
   ")),
   
   # Application title
-  h2(id = "title-h2", "IBD sharing by family members"),
+  h2(id = "title-h2", "PriodPed: Selecting the best candidate to incorporate"),
   tags$style(HTML("#title-h2 {background-color: gray; color: white; padding: 15px}")),
   
   p(bold("Purpose: "),
-    "Estimate and visualise distributions of genomic segments shared identical-by-descent (IBD) between related individuals, or within inbred individuals (autozygosity). This is done by simulating the recombination process through the pedigree."),
+    "This shiny app aims to help in decision making during a kinship test case. It allows calculating which family member is the best option to incorpore into the reference pedigree."),
   
   p(bold("More information: "),
-    "This program is a frontend for the R package ", link("ibdsim2", "https://github.com/magnusdv/ibdsim2"), 
-    ", which is part of the ", link("ped suite", "https://magnusdv.github.io/pedsuite"), " ecosystem for pedigree analysis.", 
-    "Details about the simulations and the various parameters can be found in the documentation of ibdsim2 (and also in the book ",
-    link("Pedigree analysis in R", "https://www.elsevier.com/books/pedigree-analysis-in-r/vigeland/978-0-12-824430-2"), ")."), 
+    "This program is a frontend for the R package ", link("mispitools", "https://github.com/fmarsico"), 
+    ", which is part of the ", 
+    "Details about the simulations and the various parameters can be found in the documentation of mispitools."), 
   
   p(bold("Tip: "),
     "If you want to load a custom pedigree, you can use ", link("QuickPed", "https://magnusdv.shinyapps.io/ibdsim2-shiny/"), 
