@@ -21,8 +21,8 @@ install.packages("patchwork")
 ```
 
 ## Use
-A quick guide for performing simulations is presented below:
-(1) select the reference allele frequency database (examples are from leapdna.org).
+A quick guide for performing simulations is presented below:\
+(1) select the reference allele frequency database (examples are from leapdna.org).\
 (2) Choose the individuals (could be groups of individuals) to simulate.
 (3) Choose the missing person (it should no be one of the selected in step 2).
 (4) Select number of simulations:
