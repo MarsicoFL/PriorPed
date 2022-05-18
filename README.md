@@ -4,6 +4,7 @@ This is a shiny app for prioritising family members for genotyping in missing pe
 ## Installation
 You can easily locally run PriorPed opening Rstudio an executing the following commands:
 ```{r, eval = FALSE}
+install.packages("shiny")
 library(shiny)
 shiny::runGitHub(repo = "MarsicoFL/PriorPed")
 ```
