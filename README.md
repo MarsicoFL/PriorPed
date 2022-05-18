@@ -32,4 +32,4 @@ Note: the number of simulations could be computationally expensive, so it is rec
 (5) Click on Simulate!
 
 
-![Screenshot]("Data/Captura de pantalla de 2022-05-18 20-03-15.png")
+![Screenshot](im2.png)
