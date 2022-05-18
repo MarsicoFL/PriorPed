@@ -32,4 +32,4 @@ Note: the number of simulations could be computationally expensive, so it is rec
 (5) Click on Simulate!
 
 
-![Screenshot](im2.png)
+![Screenshot](Im2.png)
