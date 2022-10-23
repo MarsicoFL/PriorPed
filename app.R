@@ -51,7 +51,7 @@ ui = fluidPage(
     "Details about the simulations and the various parameters can be found in the documentation of mispitools."), 
   
   p(bold("Tip: "),
-    "If you want to load a custom pedigree, you can use ", link("QuickPed", "https://magnusdv.shinyapps.io/ibdsim2-shiny/"), 
+    "If you want to load a custom pedigree, you can use ", link("QuickPed", "https://magnusdv.shinyapps.io/quickped/"), 
     " to create the required ped file."),
   
   # Widgets --------------------------------------------------------------
