@@ -46,9 +46,8 @@ ui = fluidPage(
     "This shiny app aims to help in decision making during a kinship test case. It allows calculating which family member is the best option to incorpore into the reference pedigree."),
   
   p(bold("More information: "),
-    "This program is a frontend for the R package ", link("mispitools", "https://github.com/fmarsico"), 
-    ", which is part of the ", 
-    "Details about the simulations and the various parameters can be found in the documentation of mispitools."), 
+    "This program is a frontend for the R package ", link("mispitools", "https://github.com/marsicoFL"), 
+    ". Details about the simulations and the various parameters can be found in the documentation of mispitools."), 
   
   p(bold("Tip: "),
     "If you want to load a custom pedigree, you can use ", link("QuickPed", "https://magnusdv.shinyapps.io/quickped/"), 
