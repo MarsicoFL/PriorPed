@@ -1,14 +1,34 @@
 
 #####CARGO E INSTALO PAQUETES (agrego stringr)
-packages<-c("patchwork","shiny", "shinyjs", "glue", "ibdsim2","ribd","lubridate","dplyr", "pedprobr", 
-            "pedtools", "pedmut", "forrel", "httr", "jsonlite", "poibin", "igraph", "shinycssloaders", "purrr", "stringr")
-installed_packages <- packages %in% rownames(installed.packages())
-if (any(installed_packages == FALSE)) {
-  install.packages(packages[!installed_packages])
-}
-
+#packages<-c("patchwork","shiny", "shinyjs", "glue", "ibdsim2","ribd","lubridate","dplyr", "pedprobr", 
+#            "pedtools", "pedmut", "forrel", "httr", "jsonlite", "poibin", "igraph", "shinycssloaders", "purrr", "stringr", "magrittr" )
+#installed_packages <- packages %in% rownames(installed.packages())
+library(shinyjs)
+library(ibdsim2)
+library(lubridate)
+library(shiny)
+library(patchwork)
+library(glue)
+library(ribd)
+library(dplyr)
+library(pedprobr)
+library(pedtools)
+library(pedmut)
+library(forrel)
+library(httr)
+library(jsonlite)
+library(poibin)
+library(igraph)
+library(shinycssloaders)
+library(purrr)
+library(stringr)
+library(magrittr)
+        #if (any(installed_packages == FALSE)) {
+#  install.packages(packages[!installed_packages])
+  
+#  }
 # Packages loading
-invisible(lapply(packages, library, character.only = TRUE))
+#invisible(lapply(packages, library, character.only = TRUE))
 #####
 
 #analysis.form-group { margin-top: 15px; margin-bottom: 3px;}
