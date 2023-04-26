@@ -8,7 +8,7 @@ install.packages("shiny")
 library(shiny)
 shiny::runGitHub(repo = "MarsicoFL/PriorPed")
 ```
-Also, it they are not installed previously, the following packages are required
+Also, it they are not installed previously, the following packages are required:
 ```{r, eval = FALSE}
 
 install.packages("shinyjs")
