@@ -37,8 +37,7 @@ library(magrittr)
 ###spinner:
 options(spinner.color = "#5661f4", spinner.type = 6, spinner.color.background = "#ffffff", spinner.size = 0.5)
 
-VERSION = list(shinyapp = "1.3.0", 
-               ibdsim2 = packageVersion("ibdsim2"))
+VERSION = list(shinyapp = "1.3.0")
 
 .MODELS = c(Haldane = "haldane", chi2 = "chi")
 .MAPS = c("Decode (1-22)" = "decode19", "Single (26M/42M)" = "onechrom")
