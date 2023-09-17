@@ -87,7 +87,7 @@ ui = fluidPage(
               ),
               ##### CAMBIE EL NOMBRE DEL OUTPUT A POWERPLOT
               fluidRow(
-                column(6, align = "center", plotOutput("powerplot", width = "100%") %>% withSpinner(hide.ui = FALSE)),
+                column(6, align = "center", plotOutput("powerplot", width = "100%")), # %>% withSpinner(hide.ui = FALSE)),
               ),
     ),
     
