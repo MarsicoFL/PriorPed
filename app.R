@@ -1,7 +1,7 @@
 
 #####CARGO E INSTALO PAQUETES (agrego stringr)
-packages<-c("patchwork","shiny", "shinyjs", "glue", "ibdsim2","ribd","lubridate","dplyr", "pedprobr", 
-            "pedtools", "pedmut", "forrel", "httr", "jsonlite", "poibin", "igraph", "shinycssloaders", "purrr", "stringr", "magrittr" )
+packages<-c("patchwork","shiny", "shinyjs", "glue","ribd","lubridate","dplyr", 
+            "pedtools", "forrel", "httr", "jsonlite", "igraph", "shinycssloaders" )
 installed_packages <- packages %in% rownames(installed.packages())
 #library(shinyjs)
 #library(lubridate)
