@@ -1,31 +1,12 @@
-
 #####CARGO E INSTALO PAQUETES (agrego stringr)
-packages<-c("patchwork","shiny", "shinyjs", "glue","ribd","lubridate","dplyr", 
-            "pedtools", "forrel", "httr", "jsonlite", "igraph", "shinycssloaders" )
+packages<-c("patchwork","shiny", "shinyjs", "glue", "ibdsim2","ribd","lubridate","dplyr", "pedprobr", 
+            "pedtools", "pedmut", "forrel", "httr", "jsonlite", "poibin", "igraph", "shinycssloaders", "purrr", "stringr", "magrittr" , "shinyjs")
 installed_packages <- packages %in% rownames(installed.packages())
-#library(shinyjs)
-#library(lubridate)
-#library(shiny)
-#library(patchwork)
-#library(glue)
-#library(ribd)
-#library(dplyr)
-#library(pedprobr)
-#library(pedtools)
-#library(pedmut)
-#library(forrel)
-#library(httr)
-#library(jsonlite)
-#library(poibin)
-#library(igraph)
-#library(shinycssloaders)
-#library(purrr)
-#library(stringr)
-#library(magrittr)
+
 if (any(installed_packages == FALSE)) {
   install.packages(packages[!installed_packages])}
 # Packages loading
-#invisible(lapply(packages, library, character.only = TRUE))
+invisible(lapply(packages, library, character.only = TRUE))
 #####
 
 #analysis.form-group { margin-top: 15px; margin-bottom: 3px;}
@@ -37,13 +18,10 @@ options(spinner.color = "#5661f4", spinner.type = 6, spinner.color.background = 
 
 VERSION = list(shinyapp = "1.3.0")
 
-.MODELS = c(Haldane = "haldane", chi2 = "chi")
-.MAPS = c("Decode (1-22)" = "decode19", "Single (26M/42M)" = "onechrom")
-
 # User interface
 ui = fluidPage(
   
-  useShinyjs(),  # Set up shinyjs
+  shinyjs::useShinyjs(),  # Set up shinyjs
   
   tags$head(
     tags$style(type = "text/css", "
@@ -58,16 +36,21 @@ ui = fluidPage(
   h2(id = "title-h2", "PriodPed: Selecting the best candidate to incorporate"),
   tags$style(HTML("#title-h2 {background-color: gray; color: white; padding: 15px}")),
   
-  p(bold("Purpose: "),
-    "This shiny app aims to help in decision making during a kinship test case. It allows calculating which family member is the best option to incorpore into the reference pedigree."),
+  p(tags$b("Purpose: "),
+    "This Shiny application is designed to assist in decision-making during kinship testing. It enables the calculation of statistical power based on available information for performing identifications. Additionally, it can be utilised to analyse which potential new reference family member could enhance the results obtained in the identification process."),
   
-  p(bold("More information: "),
-    "This program is a frontend for the R package ", link("mispitools", "https://github.com/MarsicoFL/mispitools"), 
-    ". Details about the simulations and the various parameters can be found in the documentation of mispitools."), 
+  p(tags$b("More information: "),
+    "More information could be found in the reference paper: ", tags$a(href="https://doi.org/10.1016/j.fsigen.2020.102376", "prioritising family members"),
+    ". Details about the simulations and the various parameters can be found in the paper. Also, for Spanish speakers, chapter 5 of the doctoral thesis entitled: Diseño de Herramientas Matemático-Computacionales para la búsqueda de personas desaparecidas, deeply explain the motivations, methods and implementation with several examples. It could be found here: ",tags$a(href="https://github.com/MarsicoFL/TesisDoctoral/blob/main/Tesis_Marsico.pdf", "Doctoral Thesis")),
+ 
+  p(tags$b("Tip: "),
+    "If you want to load a custom pedigree, you can use ", tags$a(href="https://magnusdv.shinyapps.io/quickped/", "QuickPed"),
+    " to create the required ped file. Also, allele frequency databases were obtained from", tags$a(href=" https://leapdna.org/explore/studies/", "Leapdna.")),
   
-  p(bold("Tip: "),
-    "If you want to load a custom pedigree, you can use ", link("QuickPed", "https://magnusdv.shinyapps.io/quickped/"), 
-    " to create the required ped file."),
+  p(tags$b("Contact: "),
+    "Do not hesitate in contact the developer: Dr. Franco Marsico, franco.lmarsico@gmail, or though the ", tags$a(href="https://github.com/MarsicoFL/", "Github account"),
+    ", for further information."),
+  
   
   # Widgets --------------------------------------------------------------
   fluidRow(
@@ -82,11 +65,11 @@ ui = fluidPage(
                  selectizeInput("lista_paises1", "Select region for allele frequency", selected = "Argentina", choices = indice.lugares.alelos$lugar, size = 10),
                  #textInput("ids1", "Individuals", value = "", width = "100%"),
                  #CAMBIO POR LISTA DESPLEGABLE CON MULTIPLES OPCIONES
-                 selectizeInput("ids1","Individuals", choices="", selected="", multiple=T),
+                 selectizeInput("ids1","Reference individual", choices="", selected="", multiple=T),
                  #PARA AGREGAR NUEVOS INDIVIDUOS A SIMULAR
                  actionButton("add", "Add Group of individuals"),
                  #CAMBIO POR LISTA DESPLEGABLE CON UNICA OPCION
-                 selectizeInput("id_missing1", "Missing individual", choices="", selected=""),
+                 selectizeInput("id_missing1", "Missing Person", choices="", selected=""),
                  textInput("label1", "Label", width = "100%"),
                  
                  # Simulate!
@@ -115,48 +98,38 @@ ui = fluidPage(
     column(6, wellPanel(id = "bottomwell1",
                         h4("Options"),
                         fluidRow(
-                          column(4, numericInput("nProfiles", "nProfiles:", value = 10, min = 1, max = 100)),
-                          column(4, numericInput("lrSims", "lrSims:", value = 100, min = 1, max = 1000)),
+                          column(4, numericInput("nProfiles", "nProfiles:", value = 1, min = 1, max = 100)),
+                          column(4, numericInput("lrSims", "lrSims:", value = 20, min = 1, max = 1000)),
                           column(4, style="margin-top: 25px", align = "center", downloadButton("download", "Download data", class="btn btn"))
                         )))),
-  )
+)
 
 
 
 # Server logic
 server = function(input, output, session) {
   
-
+  
   SEED = 1234
   
   ped1 = reactiveVal(NULL)
-
-  ###### CAMBIE LA SEPARACION DE LISTAS DE - A // (MENOS COMUN EN UN ID)    
-  # ids1 = reactive(as.list(strsplit(input$ids1, '//')[[1]]) %>%
-  #                   map(., function(x){
-  #                     setdiff(trimws(strsplit(x, ",")[[1]]), "")
-  #                   })
-  # )
   
-  #CONTADOR DE CUANTAS CONFORMACIONES FAMILIARES SE HACEN (PARA REFERENCIAR LOS INPUT ID)
+
   fams_input <- reactiveValues(btn = 1)
-  #ACTUALIZACION DE FAMILIARES EN BASE A BUILTIN PEDIGREE ELEGIDO (AHORA CON SELECTIZEINPUT)
   observeEvent(input$builtin1, {
     ped1(loadBuiltin(req(input$builtin1)))
     updateSelectizeInput(session, "ids1", selected = founders(ped1()), choices = ped1()$ID)
   })
   
-  #CADA VEZ Q SE AGREGA EL ADD (Other Individuals") SE GENERA UN NUEVO input$ids, IDENTIFICADO POR EL CONTADOR FAMS_INPUT QUE SE ACTUALIZA.
   observeEvent(input$add, {
     fams_input$btn<-fams_input$btn+1
     insertUI(
       selector = "#add",
       where = "beforeBegin",
       ui = selectizeInput(paste0("ids", fams_input$btn), "Other individuals", choices = ped1()$ID, multiple=T)
-        )
-    })
+    )
+  })
   
-  #SE LISTAN TODOS LOS IDS (HASTA 5 POSIBLES) Y SE COMPACTA PARA ELIMINAR LOS NULL (NO USADOS)
   ids1=reactive(compact(list(input$ids1, input$ids2, input$ids3,input$ids4,input$id5)))
   
   observeEvent(input$builtin1, {
@@ -164,10 +137,7 @@ server = function(input, output, session) {
     updateSelectizeInput(session, "id_missing1", selected = toString(leaves(ped1())[1]), choices = ped1()$ID)
   })
   
-  ##### SI EL FILENAME TERMINA EN TXT O PED, USA loadPed.  
-  ##### SINO USA readFam, SE QUEDA CON LA REFERENCE FAMILY. Y A LOS ID SACALES EL CORCHETE QUE SE USA PARA LA CARGA AUTOMATICA DE EXPORTABLES A FAMILIAS  
-  ##### problema: no se actualiza lo q pongo en fam_name (queda el valor que esta cuando se carga el archivo)
-  
+
   observeEvent(input$loadped1, {
     if (grepl("(txt|ped)$",input$loadped1)) {
       ped = tryCatch(loadPed(input$loadped1$datapath),
@@ -189,7 +159,7 @@ server = function(input, output, session) {
     } 
   })
   
- 
+  
   
   map1 = reactive({
     dMap = loadMap("decode19", uniform = TRUE, sexAverage = !input$sexspec1)
@@ -197,22 +167,16 @@ server = function(input, output, session) {
   })
   
   
-  # Simulations -------------------------------------------------------------
-  
-  # Reset if anything changes
   observe({ped1(); ids1(); input$nProfiles; input$lrSims; enable("simulate1")})
-
-  # Icons
-  output$icon1 = renderUI(icon(name = if(is.null(sim1())) "arrow-left" else "check"))
-
-  #Lista de alelos:
   
+  output$icon1 = renderUI(icon(name = if(is.null(sim1())) "arrow-left" else "check"))
+  
+
   lista.alelos <- reactive({
     get.freq.alelos(input$lista_paises1)
   })
   
   
-  # Simulate!
   sim1 <- eventReactive(input$simulate1, {
     chk = checkSimInput(ped1(), ids1())
     if(chk != "ok")
@@ -230,9 +194,8 @@ server = function(input, output, session) {
             #numCores = 10, 
             seed = 1900)
   })
- 
-  # Observed data -----------------------------------------------------------
   
+
   observedSegs = reactive({
     lenStr = input$`obs-segs` %>% strsplit("\n") %>% unlist() %>% strsplit(",") %>% unlist() %>% trimws()
     lenStr = lenStr[lenStr != ""]
@@ -264,8 +227,7 @@ server = function(input, output, session) {
     list(nseg = nseg, total = total, mean = total/nseg, lengths = observedSegs())
   })
   
-  # Plots ----------------------------------------------------------
-  
+
   COLS = c(3, 4)
   
   ploterrs = reactiveValues(err1 = NULL, err2 = NULL)
@@ -285,7 +247,6 @@ server = function(input, output, session) {
   
   
   
-  ##### PASE LA FUNCION A REACTIVE PARA USARLA EN LA VISUALIZACION Y EN LA DESCARGA  
   power_plot=reactive({powerPlot(sim1(), type = 3)})
   output$powerplot=renderPlot({
     req(sim1())
@@ -293,27 +254,8 @@ server = function(input, output, session) {
     power_plot()
   })
   
-  
-  
-  
-  # Download data -----------------------------------------------------------
-  
   allParams1 = reactive(list(ped = ped1(), label = input$label1, builtin = input$builtin1, loadped = input$loadped1$name, ids = ids1(), seed = SEED))
   
-  #  allParams2 = reactive(list(ped = ped2(), label = input$label2, builtin = input$builtin2, loadped = input$loadped2$name, ids = ids2(), seed = SEED))
-  
-  #   output$download = downloadHandler(
-  #     filename = "ibdsim2-output.zip",
-  #     content = function(con) {
-  #       files = saveData(params1 = allParams1(), version = VERSION)
-  #       if(!length(files)) return(errModal("No data to save"))
-  #       zip(con, files, flags = "-jq9X") # j = junkpaths; q = quiet
-  #     }, 
-  #     contentType = "application/zip"
-  #   )
-  #   
-  
-  ##### DESCARGO EL POWER PLOT (USO EL LABEL COMO PREFIJO DEL FILENAME) 
   output$download = downloadHandler(
     filename=paste0(input$label1, "_powerPlot.png"),
     content= function(file){
@@ -325,5 +267,4 @@ server = function(input, output, session) {
 }
 
 
-# Run the application 
 shinyApp(ui = ui, server = server)
