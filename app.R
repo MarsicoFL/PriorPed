@@ -1,8 +1,8 @@
 
 #####CARGO E INSTALO PAQUETES (agrego stringr)
-#packages<-c("patchwork","shiny", "shinyjs", "glue", "ibdsim2","ribd","lubridate","dplyr", "pedprobr", 
-#            "pedtools", "pedmut", "forrel", "httr", "jsonlite", "poibin", "igraph", "shinycssloaders", "purrr", "stringr", "magrittr" )
-#installed_packages <- packages %in% rownames(installed.packages())
+packages<-c("patchwork","shiny", "shinyjs", "glue", "ibdsim2","ribd","lubridate","dplyr", "pedprobr", 
+            "pedtools", "pedmut", "forrel", "httr", "jsonlite", "poibin", "igraph", "shinycssloaders", "purrr", "stringr", "magrittr" )
+installed_packages <- packages %in% rownames(installed.packages())
 #library(shinyjs)
 #library(lubridate)
 #library(shiny)
@@ -22,10 +22,8 @@
 #library(purrr)
 #library(stringr)
 #library(magrittr)
-        #if (any(installed_packages == FALSE)) {
-#  install.packages(packages[!installed_packages])
-  
-#  }
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages])}
 # Packages loading
 #invisible(lapply(packages, library, character.only = TRUE))
 #####
